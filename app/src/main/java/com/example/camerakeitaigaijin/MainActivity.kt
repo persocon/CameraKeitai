@@ -1,3 +1,4 @@
+
 package com.example.camerakeitaigaijin
 
 
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
 
 //        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-        window.setFlags(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY or WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+//        window.setFlags(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY or WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
 
         setContentView(viewBinding.root)
 
@@ -59,10 +60,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             requestPermissions()
         }
-
-        // Set up the listeners for take photo and video capture buttons
-        viewBinding.imageCaptureButton.setOnClickListener { takePhoto() }
-        viewBinding.videoCaptureButton.setOnClickListener { captureVideo() }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
@@ -127,8 +124,6 @@ class MainActivity : AppCompatActivity() {
     private fun captureVideo() {
         val videoCapture = this.videoCapture ?: return
 
-        viewBinding.videoCaptureButton.isEnabled = false
-
         val curRecording = recording
         if (curRecording != null) {
             // Stop the current recording session.
@@ -163,10 +158,10 @@ class MainActivity : AppCompatActivity() {
             .start(ContextCompat.getMainExecutor(this)) { recordEvent ->
                 when(recordEvent) {
                     is VideoRecordEvent.Start -> {
-                        viewBinding.videoCaptureButton.apply {
-                            text = getString(R.string.stop_capture)
-                            isEnabled = true
-                        }
+//                        viewBinding.videoCaptureButton.apply {
+//                            text = getString(R.string.stop_capture)
+//                            isEnabled = true
+//                        }
                     }
                     is VideoRecordEvent.Finalize -> {
                         if (!recordEvent.hasError()) {
@@ -181,10 +176,10 @@ class MainActivity : AppCompatActivity() {
                             Log.e(TAG, "Video capture ends with error: " +
                                     "${recordEvent.error}")
                         }
-                        viewBinding.videoCaptureButton.apply {
-                            text = getString(R.string.start_capture)
-                            isEnabled = true
-                        }
+//                        viewBinding.videoCaptureButton.apply {
+//                            text = getString(R.string.start_capture)
+//                            isEnabled = true
+//                        }
                     }
                 }
             }
