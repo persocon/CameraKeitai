@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+
 android {
     namespace = "com.example.camerakeitaigaijin"
     compileSdk = 35
@@ -11,7 +12,8 @@ android {
     defaultConfig {
         applicationId = "com.example.camerakeitaigaijin"
         minSdk = 29
-        targetSdk = 35
+        targetSdk = 29
+        maxSdk = 29
         versionCode = 1
         versionName = "1.0"
 
@@ -45,6 +47,8 @@ android {
 }
 
 dependencies {
+    // Kotlin
+    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
@@ -53,6 +57,9 @@ dependencies {
     implementation(libs.androidx.camera.extensions)
 
     implementation(libs.androidx.constraintlayout)
+
+    implementation(libs.androidx.fragment.ktx)
+
     // To use constraintlayout in compose
     implementation(libs.androidx.constraintlayout.compose)
 
@@ -65,6 +72,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.appcompat)
+    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

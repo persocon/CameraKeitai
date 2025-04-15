@@ -1,7 +1,6 @@
 
 package com.example.camerakeitaigaijin
 
-
 import android.Manifest
 import android.content.ContentValues
 import android.content.pm.PackageManager
@@ -9,8 +8,10 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.KeyEvent
-import android.view.WindowManager
+import android.view.Menu
+import android.view.MenuInflater
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -28,6 +29,10 @@ import androidx.camera.video.VideoCapture
 import androidx.camera.video.VideoRecordEvent
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.example.camerakeitaigaijin.databinding.ActivityMainBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -46,11 +51,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cameraExecutor: ExecutorService
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        viewBinding = ActivityMainBinding.inflate(layoutInflater)
+        // HIDE DEMON SYSTEMBAR 😈
+        val windowInsetsController =
+            WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { view, windowInsets ->
+            if (windowInsets.isVisible(WindowInsetsCompat.Type.navigationBars())
+                || windowInsets.isVisible(WindowInsetsCompat.Type.statusBars())) {
+                    windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+            }
+            ViewCompat.onApplyWindowInsets(view, windowInsets)
+        }
 
-//        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-//        window.setFlags(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY or WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+        viewBinding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(viewBinding.root)
 
@@ -64,10 +80,28 @@ class MainActivity : AppCompatActivity() {
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
-    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
-        Log.d("Key", "$keyCode")
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.action_menufragment, menu)
+        return true
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return when(keyCode) {
+            KeyEvent.KEYCODE_F1 -> {
+                Log.d("131", "bookmark icon")
+                true
+            }
+            KeyEvent.KEYCODE_F2 -> {
+                Log.d("132", "camera icon")
+                true
+            }
+            KeyEvent.KEYCODE_F3 -> {
+                Log.d("133", "email icon")
+                true
+            }
             KeyEvent.KEYCODE_F4 -> {
+                Log.d("134", "globe icon")
                 captureVideo()
                 true
             }
@@ -75,7 +109,29 @@ class MainActivity : AppCompatActivity() {
                 takePhoto()
                 true
             }
-            else -> super.onKeyUp(keyCode, event)
+            KeyEvent.KEYCODE_DPAD_CENTER -> {
+                takePhoto()
+                true
+            }
+            KeyEvent.KEYCODE_DPAD_UP -> {
+                Log.d("UP", "zoom up")
+                true
+            }
+            KeyEvent.KEYCODE_DPAD_DOWN -> {
+                Log.d("DOWN", "zoom down")
+                true
+            }
+            KeyEvent.KEYCODE_DPAD_LEFT -> {
+                Log.d("LEFT", "Exposure down")
+                true
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                Log.d("RIGHT", "Exposure UP")
+                true
+            }
+            else -> {
+                return true
+            }
         }
 
     }
